@@ -273,7 +273,7 @@ html, body {
 }
 
 .destination {
-    position: absolute; top: 16px; right: 20px;
+    position: absolute; top: 40px; right: 20px;
     text-align: center; z-index: 5;
 }
 .palace-icon { font-size: 2.5rem; filter: drop-shadow(0 0 10px rgba(255,214,0,0.4)); }
@@ -454,6 +454,52 @@ html, body {
     font-size: 1.2rem; font-weight: 700; color: var(--gold);
     min-height: 36px; padding: 8px;
 }
+
+/* Prize Editor */
+.btn-edit {
+    background: transparent; border: 1px solid rgba(255,214,0,0.3);
+    color: var(--gold); padding: 6px 16px; border-radius: 50px;
+    font-size: 0.8rem; cursor: pointer; margin-top: 20px; margin-bottom: 12px;
+    font-family: var(--font-body); transition: all 0.3s;
+}
+.btn-edit:hover { background: rgba(255,214,0,0.1); }
+
+.prize-editor {
+    width: 100%; max-width: 400px; margin: 0 auto 16px;
+    background: var(--bg-card); border: 1px solid rgba(255,214,0,0.2);
+    border-radius: 16px; padding: 16px; backdrop-filter: blur(10px);
+}
+.editor-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+.editor-row {
+    display: flex; gap: 8px; align-items: center;
+}
+.editor-row input {
+    flex: 1; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 8px; padding: 8px 12px; color: var(--text-light);
+    font-size: 0.9rem; font-family: var(--font-body); outline: none;
+    transition: border-color 0.3s;
+}
+.editor-row input:focus { border-color: var(--gold); }
+.btn-remove {
+    background: rgba(211,47,47,0.2); border: 1px solid rgba(211,47,47,0.4);
+    color: var(--red-light); width: 32px; height: 32px; border-radius: 8px;
+    cursor: pointer; font-size: 1rem; display: flex; align-items: center;
+    justify-content: center; transition: all 0.3s; flex-shrink: 0;
+}
+.btn-remove:hover { background: rgba(211,47,47,0.4); }
+
+.editor-actions { display: flex; gap: 8px; justify-content: center; }
+.btn-editor {
+    padding: 6px 16px; border-radius: 8px; font-size: 0.8rem;
+    cursor: pointer; font-family: var(--font-body); font-weight: 600;
+    transition: all 0.3s; border: 1px solid;
+}
+.btn-add { background: rgba(46,125,50,0.2); border-color: rgba(76,175,80,0.4); color: #a5d6a7; }
+.btn-add:hover { background: rgba(46,125,50,0.4); }
+.btn-save { background: rgba(255,214,0,0.15); border-color: rgba(255,214,0,0.4); color: var(--gold); }
+.btn-save:hover { background: rgba(255,214,0,0.3); }
+.btn-reset { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.2); color: var(--text-muted); }
+.btn-reset:hover { background: rgba(255,255,255,0.1); }
 
 /* Responsive */
 @media (max-width: 600px) {

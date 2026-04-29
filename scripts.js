@@ -32,14 +32,28 @@ const quizzes = [
     { question: 'Ngày 30/4/1975 đánh dấu sự kiện lịch sử gì?', options: ['Ký hiệp định Paris', 'Giải phóng miền Nam thống nhất đất nước', 'Thành lập nước CHXHCN Việt Nam', 'Tổng tuyển cử'], answer: 1 }
 ];
 
-// Prizes
-const prizes = [
+// Default prizes (fallback)
+const defaultPrizes = [
     'Một bữa Haidilao',
     'Một Matcha Latte',
     'Một Kichi-Kichi',
     'Một trà sữa',
     'Chúc em may mắn lần sau =,='
 ];
+
+// Load prizes from localStorage or use defaults
+let prizes = loadPrizes();
+
+function loadPrizes() {
+    try {
+        const saved = localStorage.getItem('wheelPrizes');
+        if (saved) {
+            const parsed = JSON.parse(saved);
+            if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        }
+    } catch (e) { /* ignore */ }
+    return [...defaultPrizes];
+}
 
 // DOM shortcuts
 const $ = id => document.getElementById(id);
@@ -515,3 +529,55 @@ window.addEventListener('resize', () => {
     if ($('victory-screen').classList.contains('active')) resizeFw();
     if ($('game-screen').classList.contains('active')) moveTank();
 });
+
+// ── Prize Editor ──
+function togglePrizeEditor() {
+    const editor = $('prize-editor');
+    const visible = editor.style.display !== 'none';
+    editor.style.display = visible ? 'none' : 'block';
+    if (!visible) renderEditorList();
+}
+
+function renderEditorList() {
+    const list = $('editor-list');
+    list.innerHTML = '';
+    prizes.forEach((prize, i) => {
+        const row = document.createElement('div');
+        row.className = 'editor-row';
+        row.innerHTML = `<input type="text" value="${prize.replace(/"/g, '&quot;')}" data-index="${i}">` +
+            `<button type="button" class="btn-remove" onclick="removePrizeRow(${i})">✕</button>`;
+        list.appendChild(row);
+    });
+}
+
+function addPrizeRow() {
+    prizes.push('Phần thưởng mới');
+    renderEditorList();
+}
+
+function removePrizeRow(index) {
+    if (prizes.length <= 2) return;
+    prizes.splice(index, 1);
+    renderEditorList();
+}
+
+function savePrizes() {
+    const inputs = $('editor-list').querySelectorAll('input');
+    prizes.length = 0;
+    inputs.forEach(input => {
+        const val = input.value.trim();
+        if (val) prizes.push(val);
+    });
+    if (prizes.length === 0) prizes.push(...defaultPrizes);
+    localStorage.setItem('wheelPrizes', JSON.stringify(prizes));
+    drawWheel();
+    $('prize-editor').style.display = 'none';
+}
+
+function resetPrizes() {
+    prizes.length = 0;
+    prizes.push(...defaultPrizes);
+    localStorage.removeItem('wheelPrizes');
+    renderEditorList();
+    drawWheel();
+}
