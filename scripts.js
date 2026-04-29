@@ -109,12 +109,32 @@ renderParticles();
 // ── YouTube Music ──
 let player = null;
 
+function syncMusicBtn() {
+    const btn = $('music-toggle');
+    if (state.musicOn) {
+        btn.classList.add('playing');
+        btn.querySelector('.music-icon').textContent = '🔊';
+    } else {
+        btn.classList.remove('playing');
+        btn.querySelector('.music-icon').textContent = '🔇';
+    }
+}
+
+function tryAutoPlay() {
+    if (!player || state.musicOn) return;
+    try {
+        player.playVideo();
+        state.musicOn = true;
+        syncMusicBtn();
+    } catch (e) { /* blocked by browser */ }
+}
+
 function onYouTubeIframeAPIReady() {
     player = new YT.Player('youtube-player', {
         height: '0', width: '0',
         videoId: 'qaVjA4a9O7w',
         playerVars: { autoplay: 0, loop: 1, playlist: 'qaVjA4a9O7w' },
-        events: { onReady: () => player.setVolume(40) }
+        events: { onReady: function () { player.setVolume(40); } }
     });
 }
 
@@ -123,14 +143,11 @@ $('music-toggle').addEventListener('click', function () {
     if (state.musicOn) {
         player.pauseVideo();
         state.musicOn = false;
-        this.classList.remove('playing');
-        this.querySelector('.music-icon').textContent = '🔇';
     } else {
         player.playVideo();
         state.musicOn = true;
-        this.classList.add('playing');
-        this.querySelector('.music-icon').textContent = '🔊';
     }
+    syncMusicBtn();
 });
 
 // ── Screen Management ──
@@ -212,16 +229,6 @@ function startGame() {
     updateLocation();
     showFact(0);
     moveTank();
-
-    if (player && !state.musicOn) {
-        try {
-            player.playVideo();
-            state.musicOn = true;
-            const btn = $('music-toggle');
-            btn.classList.add('playing');
-            btn.querySelector('.music-icon').textContent = '🔊';
-        } catch (e) { /* needs user gesture */ }
-    }
 }
 
 function handleAdvance() {
