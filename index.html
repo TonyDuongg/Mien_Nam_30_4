@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Game Tiến Lên - Hành Trình Thống Nhất. Kỷ niệm ngày Giải phóng miền Nam 30/4 và Quốc tế Lao động 1/5">
+    <title>Tiến Lên - Hành Trình Thống Nhất</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <canvas id="particles-canvas"></canvas>
+
+    <!-- YouTube Music -->
+    <div id="youtube-player-container">
+        <div id="youtube-player"></div>
+    </div>
+
+    <!-- Music Toggle -->
+    <button type="button" id="music-toggle" class="music-btn" title="Bật/Tắt nhạc">
+        <span class="music-icon">🔇</span> Nhạc
+    </button>
+
+    <!-- Intro Screen -->
+    <section id="intro-screen" class="screen active">
+        <div class="intro-content">
+            <div class="flag-wrapper">
+                <div class="vn-flag">
+                    <div class="flag-star">★</div>
+                </div>
+            </div>
+            <h1 class="game-title">
+                <span class="title-line-1">Tiến Lên</span>
+                <span class="title-line-2">Hành Trình Thống Nhất</span>
+            </h1>
+            <p class="game-subtitle">Kỷ niệm ngày Giải phóng miền Nam thống nhất đất nước 30/4<br>&amp; Quốc tế Lao động 1/5</p>
+
+            <div class="intro-description">
+                <p>Hãy cùng lái xe tăng vượt qua các chặng đường lịch sử<br>từ Bắc vào Nam để tiến tới Dinh Độc Lập!</p>
+                <p class="intro-hint">Trả lời đúng các câu hỏi lịch sử để tiến lên phía trước</p>
+            </div>
+
+            <button type="button" id="start-btn" class="btn-primary btn-glow" onclick="startGame()">
+                Bắt Đầu Hành Trình
+            </button>
+
+            <div class="intro-badges">
+                <div class="badge"><span>30</span>/4</div>
+                <div class="badge-divider">✦</div>
+                <div class="badge"><span>1</span>/5</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Game Screen -->
+    <section id="game-screen" class="screen">
+        <div class="game-hud">
+            <div class="hud-item">
+                <span class="hud-label">Chặng</span>
+                <span class="hud-value" id="stage-display">1/7</span>
+            </div>
+            <div class="hud-item hud-center">
+                <span class="hud-label">Điểm</span>
+                <span class="hud-value hud-score" id="score-display">0</span>
+            </div>
+            <div class="hud-item">
+                <span class="hud-label">Mạng</span>
+                <span class="hud-value" id="lives-display">❤️❤️❤️</span>
+            </div>
+        </div>
+
+        <!-- Journey Map -->
+        <div class="journey-map">
+            <div class="map-road" id="map-road"></div>
+
+            <div class="tank-wrapper" id="tank-wrapper">
+                <div class="tank" id="tank">
+                    <div class="tank-body">
+                        <div class="tank-turret"></div>
+                        <div class="tank-barrel"></div>
+                        <div class="tank-hull"></div>
+                        <div class="tank-track track-left">
+                            <div class="track-wheel"></div>
+                            <div class="track-wheel"></div>
+                            <div class="track-wheel"></div>
+                        </div>
+                        <div class="tank-track track-right">
+                            <div class="track-wheel"></div>
+                            <div class="track-wheel"></div>
+                            <div class="track-wheel"></div>
+                        </div>
+                    </div>
+                    <div class="tank-flag">
+                        <div class="mini-flag"><span>★</span></div>
+                    </div>
+                    <div class="tank-exhaust" id="tank-exhaust"></div>
+                </div>
+            </div>
+
+            <div class="destination" id="destination">
+                <div class="palace-icon">🏛️</div>
+                <span class="destination-label">Dinh Độc Lập</span>
+            </div>
+        </div>
+
+        <!-- Progress -->
+        <div class="journey-progress">
+            <div class="progress-track">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <div class="progress-labels">
+                <span>Hà Nội</span>
+                <span>Sài Gòn</span>
+            </div>
+        </div>
+
+        <div class="current-location" id="current-location">
+            <span class="location-name" id="location-name">Hà Nội</span>
+        </div>
+
+        <!-- Fact Box -->
+        <div class="fact-box" id="fact-box">
+            <p class="fact-text" id="fact-text"></p>
+        </div>
+
+        <button type="button" id="advance-btn" class="btn-primary btn-advance" onclick="handleAdvance()">
+            Tiến Lên!
+        </button>
+    </section>
+
+    <!-- Quiz Modal -->
+    <div id="quiz-modal" class="modal-overlay">
+        <div class="modal-content quiz-content">
+            <div class="quiz-header">
+                <span class="quiz-stage" id="quiz-stage">Chặng 1</span>
+                <span class="quiz-location" id="quiz-location">Huế</span>
+            </div>
+            <h2 class="quiz-question" id="quiz-question">Câu hỏi</h2>
+            <div class="quiz-options" id="quiz-options"></div>
+            <div class="quiz-feedback" id="quiz-feedback"></div>
+            <div class="quiz-timer-bar">
+                <div class="quiz-timer-fill" id="quiz-timer-fill"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Victory Screen -->
+    <section id="victory-screen" class="screen">
+        <canvas id="fireworks-canvas"></canvas>
+        <div class="victory-content">
+            <h1 class="victory-title">
+                <span class="victory-line-1">Chiến Thắng!</span>
+                <span class="victory-line-2">Giải Phóng Miền Nam</span>
+                <span class="victory-line-3">Thống Nhất Đất Nước</span>
+            </h1>
+            <p class="victory-subtitle">Xe tăng đã tiến vào Dinh Độc Lập!</p>
+            <p class="victory-score">Điểm số: <span id="final-score">0</span></p>
+            <p class="victory-date">30 tháng 4 năm 1975</p>
+
+            <div class="victory-divider"></div>
+
+            <h2 class="wheel-title">Quay Phần Thưởng Chiến Thắng</h2>
+            <div class="wheel-container">
+                <div class="wheel-box" id="wheel-box">
+                    <div class="wheel-pointer"></div>
+                    <canvas id="wheel-canvas" width="340" height="340"></canvas>
+                </div>
+            </div>
+            <button type="button" id="spin-btn" class="btn-primary btn-spin" onclick="spinWheel()">
+                Quay Thưởng
+            </button>
+            <div class="prize-result" id="prize-result"></div>
+
+            <button type="button" id="replay-btn" class="btn-secondary" onclick="replayGame()" style="display:none;">
+                Chơi Lại
+            </button>
+        </div>
+    </section>
+
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script src="scripts.js"></script>
+</body>
+</html>
